@@ -1,6 +1,6 @@
 package dev.matthe815.MMOPartiesTANCompat;
 
-import deathtags.gui.HealthBar;
+import deathtags.gui.PartyList;
 import deathtags.gui.UISpec;
 import deathtags.networking.BuilderData;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,6 +10,7 @@ import toughasnails.api.thirst.ThirstHelper;
 
 public class BuilderThirst implements BuilderData {
     int thirst = 10;
+
     public static ResourceLocation TAN_ICONS = new ResourceLocation("toughasnails", "textures/gui/icons.png");
 
     @Override
@@ -22,12 +23,17 @@ public class BuilderThirst implements BuilderData {
         thirst = packetBuffer.readInt();
     }
 
-    public static class Renderer implements HealthBar.NuggetBar {
+    @Override
+    public boolean IsDifferent(PlayerEntity playerEntity) {
+        return ThirstHelper.getThirst(playerEntity).getThirst() != thirst;
+    }
+
+    public static class Renderer implements PartyList.NuggetBar {
 
         @Override
         public int Render(BuilderData builderData, int offsetX, int offsetY, boolean render) {
             BuilderThirst data = (BuilderThirst) builderData;
-            return HealthBar.DrawNuggetBar(data.thirst, 20, new UISpec(TAN_ICONS, offsetX, offsetY, 36, 0, 9, 9), 0, 9);
+            return PartyList.DrawNuggetBar(data.thirst, 20, new UISpec(TAN_ICONS, offsetX, offsetY, 36, 0, 9, 9), 0, 9);
         }
     }
 }
